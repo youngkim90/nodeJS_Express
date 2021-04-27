@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>email form</title>
+</head>
+<body>
+    <form action="/email_post" method="post">
+        <input type="text" class="searchBar" placeholder="검색">
+    </form>
+    <button class="ajaxsend">검색</button>
+
+    <script>
+        document.querySelector('.ajaxsend').addEventListener('click', function(){
+            var inputdata = document.querySelector('.searchBar').value;
+            sendAjax('http://127.0.0.1:3000/searching', inputdata);
+        })
+
+        function sendAjax(url, data){
+            var data = {'search' : data};
+            data = JSON.stringify(data);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type',"application/json");
+            xhr.send(data);
+
+            xhr.addEventListener('load', function(){
+                var serachForm = document.forms[0];
+                var searchNavi = document.createElement('div');
+                searchNavi.className = "searchNavi";
+                searchNavi.textContent = xhr.responseText;
+                serachForm.after(searchNavi);
+            });
+        }
+    </script>
+    <style>
+        .searchNavi {
+            border: 3px solid forestgreen;
+            width: fit-content;
+        }
+    </style>
+</body>
+</html>
